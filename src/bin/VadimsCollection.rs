@@ -3,27 +3,32 @@
 use std::io::stdin;
 
 #[macro_export]
+macro_rules! call {
+    ($cnt:expr, $e:expr) => {
+        let n: u32 = $cnt;
+        for _ in 0..n {
+            ($e)()
+        }
+    };
+}
+
 macro_rules! rl {
-    ( $cnt:literal, $t:ty ) => {
+    ($t:ty ) => {
         {
-            let _ :u32 = $cnt;
             let mut ret = Vec::new();
-            for _ in 0..$cnt {
-                let mut input = String::new();
-                let _ = stdin().read_line(&mut input);
-                input.split(' ').for_each(|x| ret.push(x.trim().parse::<$t>().unwrap()) )
-            }
+            let mut input = String::new();
+            let _ = stdin().read_line(&mut input);
+            input.split(' ').for_each(|x| ret.push(x.trim().parse::<$t>().unwrap()));
             ret
         }
     };
 }
 
 fn main() {
-    let t = rl!(1, u32)[0];
     let mut out : Vec<String> = vec![];
 
-    for _ in 0..t {
-        let mut number = rl!(1, String).remove(0).chars().collect::<Vec<char>>();
+    call!(rl!(u32)[0], || {
+       let mut number = rl!(String).remove(0).chars().collect::<Vec<char>>();
 
         for i in 0..number.len() {
             let x = number[i].to_digit(10).unwrap();
@@ -45,8 +50,8 @@ fn main() {
                 }
             }
         }
-        out.push(format!("{}", number.iter().collect::<String>()));
-    }
+        out.push(format!("{}", number.iter().collect::<String>())); 
+    });
     out.iter().for_each(|x| println!("{}", x));
 }
 
